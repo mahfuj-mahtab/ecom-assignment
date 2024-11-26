@@ -28,18 +28,19 @@ class registerView(APIView):
             return Response({'message': 'First name or Last name is invalid'},status=403)
 
         username = email.split("@")[0]
-        user = User.objects.create_user(email = email,first_name = first_name,last_name = last_name,username = username,password = password)
+        user = User.objects.create_user(email = email,first_name = first_name,last_name = last_name,username = username,password = password) #creating a new user
         user.save()
         return Response({'message': 'User Registered Successfully'},status=201)
 
 class loginView(APIView):
+    # this function is used to login the user
     def post(self,request):
         email = request.data['email']
         username = email.split("@")[0]
         password = request.data['password']
-        user = authenticate(request,username = username,password = password)
+        user = authenticate(request,username = username,password = password) #checking if the user exist or not
         if(user is not None):
-            refresh = RefreshToken.for_user(user)
+            refresh = RefreshToken.for_user(user) #generating a refresh token
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
